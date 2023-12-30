@@ -1,13 +1,25 @@
 import telebot
+from telebot import formatting
 from telebot.types import Message,ReplyKeyboardMarkup, KeyboardButton
 import requests
 from bs4 import BeautifulSoup
-#######################################################################
+from gtts import gTTS
+import os
+
+######################################################################
 # TELEGRAM STUFF
 API_KEY = '6704201341:AAH2mHL9u_gvsCU0CWfkahmu8771KQwRXkI'
 bot = telebot.TeleBot(API_KEY)
 
-##################################################################################################################
+#################################################################################################################
+
+def escape_special_characters(input_text):
+    special_characters = ['_', '[', ']', '(', ')', '~', '`', '>',
+'#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+    for char in special_characters:
+        input_text = input_text.replace(char, f'\\{char}')
+    return input_text
+
 @bot.message_handler(commands=['start'], content_types=['text'])
 def start(message):
 
@@ -30,24 +42,66 @@ def handle_start_response(message):
     important_info = word_scrape()
 
     actual_word = important_info[0]
-    defintion = important_info[1][0]
+    definition = important_info[1][0]
+    definition_audio = generate_audio(definition,actual_word)
     example_one = important_info[1][1]
     example_two = important_info[1][2]
     did_you_know_section = important_info[2]
 
+    bold_part = formatting.mbold("Word of the Day")
+    regular_part = f"{actual_word}"
+    mixed_text = bold_part + ": " + regular_part
     bot.send_message(message.chat.id,
                f'''
-Word of the Day: {actual_word}
+{escape_special_characters(mixed_text)}
+''', parse_mode='MarkdownV2')
 
-Definition: {defintion}
+    bold_part = formatting.mbold("Definition")
+    regular_part = f"{definition}"
+    mixed_text = bold_part + ": " + regular_part
+    bot.send_message(message.chat.id,
+                     f'''
+{escape_special_characters(mixed_text)}
+    ''', parse_mode='MarkdownV2')
 
-Example One: {example_one}
+    script_dir = os.path.dirname(__file__)
 
-Example Two: {example_two}
+    # Replace 'example.mp3' with the actual name of your audio file
+    audio_filename = 'word_of_the_day.mp3'
 
-Did you know?: {did_you_know_section}
-''')
+    # Construct the full path to the audio file
+    audio_path = os.path.join(script_dir, audio_filename)
+    audio = open(audio_path, 'rb')
+    bot.send_audio(message.chat.id, audio)
+    audio.close()
 
+    bold_part = formatting.mbold("Example One")
+    regular_part = f"{example_one}"
+    mixed_text = bold_part + ": " + regular_part
+    bot.send_message(message.chat.id,
+                     f'''
+{escape_special_characters(mixed_text)}
+    ''', parse_mode='MarkdownV2')
+
+    bold_part = formatting.mbold("Example Two")
+    regular_part = f"{example_two}"
+    mixed_text = bold_part + ": " + regular_part
+    bot.send_message(message.chat.id,
+                     f'''
+{escape_special_characters(mixed_text)}
+    ''', parse_mode='MarkdownV2')
+
+    bold_part = formatting.mbold("Did you know?")
+    regular_part = f"{did_you_know_section}"
+    mixed_text = bold_part + ": " + regular_part
+    bot.send_message(message.chat.id,
+                     f'''
+{escape_special_characters(mixed_text)}
+    ''', parse_mode='MarkdownV2')
+
+def generate_audio(input_text,word_of_the_day):
+    audio = gTTS(text=input_text, lang="en", slow=False)
+    audio.save("word_of_the_day.mp3")
 
 def word_scrape():
 
@@ -81,6 +135,3 @@ def word_scrape():
     return output
 
 bot.polling()
-
-
-
