@@ -111,7 +111,7 @@ scheduler = BackgroundScheduler()
 
 # Set the start time for 21:50 Moscow time
 start_time = datetime.now(pytz.timezone('Europe/Moscow'))
-start_time = start_time.replace(hour=17, minute=58, second=0, microsecond=0)
+start_time = start_time.replace(hour=12, minute=0, second=0, microsecond=0)
 
 # Set the interval to 24 hours
 interval = 24
