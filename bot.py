@@ -16,38 +16,6 @@ API_KEY = '6704201341:AAH2mHL9u_gvsCU0CWfkahmu8771KQwRXkI'
 CHAT_ID = '-1001702148514'
 #CHAT_ID = '5289262606'
 bot = telebot.TeleBot(API_KEY)
-################################################################################################################
-def escape_special_characters(input_text):
-    special_characters = ['_', '[', ']', '(', ')', '~', '`', '>',
-'#', '+', '-', '=', '|', '{', '}', '.', '!' ]
-    for char in special_characters:
-        input_text = input_text.replace(char, f'\\{char}')
-    return input_text
-
-
-def find_synoymns(word_to_find):
-
-    array_of_synoymns = []
-
-    try:
-        url = f"https://www.thesaurus.com/browse/{word_to_find}"
-
-        response = requests.get(url=url)
-
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        actual_synoymns_box = soup.find(class_="LhpJmDktqk95S2vWg1JZ")
-
-        get_list_elements = soup.find_all('a', class_='KmScG4NplKj_3H5E3oA_')
-
-        for element in get_list_elements:
-            array_of_synoymns.append(element.text)
-
-        return array_of_synoymns
-
-    except:
-        pass
-    return array_of_synoymns
 
 def send_scheduled_message():
 
@@ -138,23 +106,57 @@ def send_scheduled_message():
     {escape_special_characters(mixed_text)}
         ''', parse_mode='MarkdownV2')
 
+# SCHEDULER SECTION
+scheduler = BackgroundScheduler()
+
+# Set the start time for 21:50 Moscow time
+start_time = datetime.now(pytz.timezone('Europe/Moscow'))
+start_time = start_time.replace(hour=17, minute=58, second=0, microsecond=0)
+
+# Set the interval to 24 hours
+interval = 24
+
+trigger = IntervalTrigger(hours=interval, start_date=start_time, timezone=pytz.timezone('Europe/Moscow'))
+scheduler.add_job(send_scheduled_message, trigger=trigger)
+scheduler.start()
+
+################################################################################################################
+def escape_special_characters(input_text):
+    special_characters = ['_', '[', ']', '(', ')', '~', '`', '>',
+'#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+    for char in special_characters:
+        input_text = input_text.replace(char, f'\\{char}')
+    return input_text
+
+
+def find_synoymns(word_to_find):
+
+    array_of_synoymns = []
+
+    try:
+        url = f"https://www.thesaurus.com/browse/{word_to_find}"
+
+        response = requests.get(url=url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        actual_synoymns_box = soup.find(class_="LhpJmDktqk95S2vWg1JZ")
+
+        get_list_elements = soup.find_all('a', class_='KmScG4NplKj_3H5E3oA_')
+
+        for element in get_list_elements:
+            array_of_synoymns.append(element.text)
+
+        return array_of_synoymns
+
+    except:
+        pass
+    return array_of_synoymns
+
+
+
 @bot.message_handler(commands=['start'], content_types=['text'])
 def start(message):
-
-    # SCHEDULER SECTION
-    scheduler = BackgroundScheduler()
-
-    # Set the start time for 21:50 Moscow time
-    start_time = datetime.now(pytz.timezone('Europe/Moscow'))
-    start_time = start_time.replace(hour=12, minute=0, second=0, microsecond=0)
-
-    # Set the interval to 24 hours
-    interval = 24
-
-
-    trigger = IntervalTrigger(hours=interval, start_date=start_time, timezone=pytz.timezone('Europe/Moscow'))
-    scheduler.add_job(send_scheduled_message, trigger=trigger)
-    scheduler.start()
 
     # KEYBOARD MARKUP/BUTTONS SECTION
     markup_reply = ReplyKeyboardMarkup(resize_keyboard=True)
