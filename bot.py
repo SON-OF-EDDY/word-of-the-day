@@ -174,7 +174,7 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def handle_start_response(message):
 
-    if message.text == 'Improve your English with a random interesting word each day!':
+    if message.text == 'Word of the Day!':
         important_info = word_scrape()
 
         actual_word = important_info[0]
