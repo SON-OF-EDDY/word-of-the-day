@@ -27,11 +27,11 @@ def send_scheduled_message():
     example_one = important_info[1][1]
     example_two = important_info[1][2]
     did_you_know_section = important_info[2]
-    synonyms_list = find_synoymns(actual_word)
-    try:
-        synonyms_long_string = ", ".join(synonyms_list)
-    except:
-        synonyms_long_string = 'None found'
+    # synonyms_list = find_synoymns(actual_word)
+    # try:
+    #     synonyms_long_string = ", ".join(synonyms_list)
+    # except:
+    #     synonyms_long_string = 'None found'
 
     bold_part = formatting.mbold("Word of the Day")
     regular_part = f"{actual_word}"
@@ -68,13 +68,13 @@ def send_scheduled_message():
 
     audio.close()
 
-    bold_part = formatting.mbold("Synonymns")
-    regular_part = f"{synonyms_long_string}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(chat_id=CHAT_ID,text=
-                     f'''
-        {escape_special_characters(mixed_text)}
-        ''', parse_mode='MarkdownV2')
+    # bold_part = formatting.mbold("Synonymns")
+    # regular_part = f"{synonyms_long_string}"
+    # mixed_text = bold_part + ": " + regular_part
+    # bot.send_message(chat_id=CHAT_ID,text=
+    #                  f'''
+    #     {escape_special_characters(mixed_text)}
+    #     ''', parse_mode='MarkdownV2')
 
     bold_part = formatting.mbold("Example One")
     regular_part = f"{example_one}"
@@ -174,78 +174,79 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def handle_start_response(message):
 
-    important_info = word_scrape()
+    if message.text == 'Improve your English with a random interesting word each day!':
+        important_info = word_scrape()
 
-    actual_word = important_info[0]
-    definition = important_info[1][0]
-    definition_audio = generate_audio(definition,actual_word)
-    example_one = important_info[1][1]
-    example_two = important_info[1][2]
-    did_you_know_section = important_info[2]
-    synonyms_list = find_synoymns(actual_word)
-    try:
-        synonyms_long_string = ", ".join(synonyms_list)
-    except:
-        synonyms_long_string = 'None found'
+        actual_word = important_info[0]
+        definition = important_info[1][0]
+        definition_audio = generate_audio(definition,actual_word)
+        example_one = important_info[1][1]
+        example_two = important_info[1][2]
+        did_you_know_section = important_info[2]
+        # synonyms_list = find_synoymns(actual_word)
+        # try:
+        #     synonyms_long_string = ", ".join(synonyms_list)
+        # except:
+        #     synonyms_long_string = 'None found'
 
-    bold_part = formatting.mbold("Word of the Day")
-    regular_part = f"{actual_word}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-               f'''
-{escape_special_characters(mixed_text)}
-''', parse_mode='MarkdownV2')
-
-    bold_part = formatting.mbold("Definition")
-    regular_part = f"{definition}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-                     f'''
-{escape_special_characters(mixed_text)}
-    ''', parse_mode='MarkdownV2')
-
-    script_dir = os.path.dirname(__file__)
-
-    # Replace 'example.mp3' with the actual name of your audio file
-    audio_filename = 'word_of_the_day.mp3'
-
-    # Construct the full path to the audio file
-    audio_path = os.path.join(script_dir, audio_filename)
-    audio = open(audio_path, 'rb')
-    bot.send_audio(message.chat.id, audio)
-    audio.close()
-
-    bold_part = formatting.mbold("Synonymns")
-    regular_part = f"{synonyms_long_string}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-                     f'''
+        bold_part = formatting.mbold("Word of the Day")
+        regular_part = f"{actual_word}"
+        mixed_text = bold_part + ": " + regular_part
+        bot.send_message(message.chat.id,
+                   f'''
     {escape_special_characters(mixed_text)}
     ''', parse_mode='MarkdownV2')
 
-    bold_part = formatting.mbold("Example One")
-    regular_part = f"{example_one}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-                     f'''
-{escape_special_characters(mixed_text)}
-    ''', parse_mode='MarkdownV2')
+        bold_part = formatting.mbold("Definition")
+        regular_part = f"{definition}"
+        mixed_text = bold_part + ": " + regular_part
+        bot.send_message(message.chat.id,
+                         f'''
+    {escape_special_characters(mixed_text)}
+        ''', parse_mode='MarkdownV2')
 
-    bold_part = formatting.mbold("Example Two")
-    regular_part = f"{example_two}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-                     f'''
-{escape_special_characters(mixed_text)}
-    ''', parse_mode='MarkdownV2')
+        script_dir = os.path.dirname(__file__)
 
-    bold_part = formatting.mbold("Did you know?")
-    regular_part = f"{did_you_know_section}"
-    mixed_text = bold_part + ": " + regular_part
-    bot.send_message(message.chat.id,
-                     f'''
-{escape_special_characters(mixed_text)}
-    ''', parse_mode='MarkdownV2')
+        # Replace 'example.mp3' with the actual name of your audio file
+        audio_filename = 'word_of_the_day.mp3'
+
+        # Construct the full path to the audio file
+        audio_path = os.path.join(script_dir, audio_filename)
+        audio = open(audio_path, 'rb')
+        bot.send_audio(message.chat.id, audio)
+        audio.close()
+
+        # bold_part = formatting.mbold("Synonymns")
+        # regular_part = f"{synonyms_long_string}"
+        # mixed_text = bold_part + ": " + regular_part
+        # bot.send_message(message.chat.id,
+        #                  f'''
+        # {escape_special_characters(mixed_text)}
+        # ''', parse_mode='MarkdownV2')
+
+        bold_part = formatting.mbold("Example One")
+        regular_part = f"{example_one}"
+        mixed_text = bold_part + ": " + regular_part
+        bot.send_message(message.chat.id,
+                         f'''
+    {escape_special_characters(mixed_text)}
+        ''', parse_mode='MarkdownV2')
+
+        bold_part = formatting.mbold("Example Two")
+        regular_part = f"{example_two}"
+        mixed_text = bold_part + ": " + regular_part
+        bot.send_message(message.chat.id,
+                         f'''
+    {escape_special_characters(mixed_text)}
+        ''', parse_mode='MarkdownV2')
+
+        bold_part = formatting.mbold("Did you know?")
+        regular_part = f"{did_you_know_section}"
+        mixed_text = bold_part + ": " + regular_part
+        bot.send_message(message.chat.id,
+                         f'''
+    {escape_special_characters(mixed_text)}
+        ''', parse_mode='MarkdownV2')
 
 def generate_audio(input_text,word_of_the_day):
     audio = gTTS(text=input_text, lang="en", slow=False)
