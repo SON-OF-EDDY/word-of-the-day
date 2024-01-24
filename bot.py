@@ -13,8 +13,9 @@ import pytz
 ################################################################################################################
 ##TELEGRAM STUFF
 API_KEY = '6704201341:AAH2mHL9u_gvsCU0CWfkahmu8771KQwRXkI'
-CHAT_ID = '-1001702148514'
-#CHAT_ID = '5289262606'
+#CHAT_ID = '-1001702148514' #ENGLISH ADVANCED GROUP
+#CHAT_ID = '5289262606' #MY CHAT ID
+CHAT_ID = '-1002129680649'
 bot = telebot.TeleBot(API_KEY)
 
 def send_scheduled_message():
