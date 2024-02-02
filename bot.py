@@ -115,7 +115,7 @@ start_time = datetime.now(pytz.timezone('Europe/Moscow'))
 start_time = start_time.replace(hour=12, minute=0, second=0, microsecond=0)
 
 # Set the interval to 24 hours
-interval = 24
+interval = 48
 
 trigger = IntervalTrigger(hours=interval, start_date=start_time, timezone=pytz.timezone('Europe/Moscow'))
 scheduler.add_job(send_scheduled_message, trigger=trigger)
